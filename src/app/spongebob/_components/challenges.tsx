@@ -22,7 +22,7 @@ export function getCurrentChallenge(): { challenge: ChallengeWorld; timeLeft: st
     const now = new Date();
     
     // Flying Dutchman will be active at 5AM UTC
-    const flyingDutchmanStart = new Date('2025-08-08T05:00:00.000Z');
+    const flyingDutchmanStart = new Date('2025-08-08T20:15:00.000Z');
     const secondsSinceFlyingStart = Math.floor((now.getTime() - flyingDutchmanStart.getTime()) / 1000);
     
     // Flying Dutchman is index 4, so offset by 4 * 15 * 60 = 3600 seconds to get cycle start
