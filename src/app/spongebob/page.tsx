@@ -162,7 +162,7 @@ export default function SpongebobPage() {
                                 <ChallengeCard 
                                     key={world.world} 
                                     world={world} 
-                                    isActive={world === currentData.challenge}
+                                    isActive={false}
                                     isNext={index === 0 && world !== currentData.challenge}
                                 />
                             ));
