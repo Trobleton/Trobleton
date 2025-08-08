@@ -6,14 +6,16 @@ import Image from 'next/image';
 export type ChallengeWorld = {
     world: string;
     image: string;
+    material: string;
+    materialImage: string;
 }
 
 export const challengeWorlds: ChallengeWorld[] = [
-    { world: "Christmas Conch Street", image: "/images/spongebob/Conch_Street_Frozen_Face-Off.webp" },
-    { world: "Goo Lagoon", image: "/images/spongebob/Goo_Lagoon.webp" },
-    { world: "Mrs. Puff's Boating School", image: "/images/spongebob/Mrs_Puffs_Boating_School.webp" },
-    { world: "Patty Vault", image: "/images/spongebob/PattyVault.webp" },
-    { world: "Flying Dutchman's Ship", image: "/images/spongebob/Flying_Duchmans_Ship.webp" }
+    { world: "Christmas Conch Street", image: "/images/spongebob/Conch_Street_Frozen_Face-Off.webp", material: "Frozen Coral", materialImage: '/images/spongebob/frozen-coral.png' },
+    { world: "Goo Lagoon", image: "/images/spongebob/Goo_Lagoon.webp", material: "Super Goo", materialImage: "/images/spongebob/super-goo.png" },
+    { world: "Mrs. Puff's Boating School", image: "/images/spongebob/Mrs_Puffs_Boating_School.webp", material: "Scratched License Plate", materialImage: '/images/spongebob/scratched-license-plate.png' },
+    { world: "Patty Vault", image: "/images/spongebob/PattyVault.webp", material: "Golden Patty Bun", materialImage: "/images/spongebob/golden-patty-bun.png" },
+    { world: "Flying Dutchman's Ship", image: "/images/spongebob/Flying_Duchmans_Ship.webp", material: "Spectral Rope", materialImage: "/images/spongebob/spectral-rope.png" }
 ];
 
 export function getCurrentChallenge(): { challenge: ChallengeWorld; timeLeft: string } {
@@ -109,6 +111,7 @@ export function ChallengeCard({ world, isActive, timeLeft, isNext }: { world: Ch
                 </svg>
 
                 <Image src={world.image} alt={world.world} width={330} height={140} className="w-full h-full object-cover" />
+                <Image src={world.materialImage} alt={world.material} width={50} height={50} className="absolute bottom-2 left-2 w-12 h-12 object-contain rounded-md" />
             </div>
         </div>
     )
