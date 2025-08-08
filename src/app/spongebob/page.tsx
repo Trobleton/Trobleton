@@ -41,16 +41,75 @@ function getCurrentChallenge(): { challenge: ChallengeWorld; timeLeft: string } 
     };
 }
 
-function ChallengeCard({ world, isActive, timeLeft }: { world: ChallengeWorld, isActive: boolean, timeLeft?: string }) {
+function ChallengeCard({ world, isActive, timeLeft, isNext }: { world: ChallengeWorld, isActive: boolean, timeLeft?: string, isNext?: boolean }) {
     return (
-        <div className="relative w-fit">
-            {isActive ? <div className="w-fit px-3 p-0.5 outline-2 outline-neutral-900 rounded-full absolute -top-4 mx-auto inset-x-0 bg-neutral-100 z-10">
-                <span className="text-sm font-bold text-white uppercase [text-shadow:1px_1px_0_black,-1px_-1px_0_black,1px_-1px_0_black,-1px_1px_0_black]">Expires In: {timeLeft}</span>
+        <div className="relative w-fit outline-2 outline-white rounded-xl">
+            {(isActive || isNext) ? <div className="w-fit rounded-full absolute -top-4 mx-auto inset-x-0 bg-neutral-100 z-10 outline-2 outline-black">
+                <svg viewBox="0 0 140 30" width="140px" height="30px">
+                    {/* Stroke layer (behind) */}
+                    <text 
+                        fill="none"
+                        stroke="black" 
+                        strokeWidth="3px" 
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                        x="50%" 
+                        y="20"
+                        textAnchor="middle"
+                        fontSize="14"
+                        fontWeight="900"
+                        fontFamily="system-ui, -apple-system, sans-serif"
+                    >
+                        {isActive ? `EXPIRES IN: ${timeLeft}` : 'UP NEXT'}
+                    </text>
+                    {/* Fill layer (on top) */}
+                    <text 
+                        fill="white" 
+                        stroke="none"
+                        x="50%" 
+                        y="20"
+                        textAnchor="middle"
+                        fontSize="14"
+                        fontWeight="900"
+                        fontFamily="system-ui, -apple-system, sans-serif"
+                    >
+                        {isActive ? `EXPIRES IN: ${timeLeft}` : 'UP NEXT'}
+                    </text>
+                </svg>
             </div> : null}
 
-            <div className="overflow-hidden rounded-xl relative">
-                <span className="absolute text-xl top-4 left-2 font-extrabold text-white [text-shadow:2px_2px_0_black,-2px_-2px_0_black,2px_-2px_0_black,-2px_2px_0_black]">{world.world}</span>
-                <Image src={world.image} alt={world.world} width={300} height={200} className="object-cover" />
+            <div className="overflow-hidden rounded-xl relative w-[330px] h-[140px]">
+                <svg viewBox="0 0 330 50" width="100%" height="50px" className="absolute top-2 left-2 z-10">
+                    {/* Stroke layer (behind) */}
+                    <text 
+                        fill="none"
+                        stroke="black" 
+                        strokeWidth="4px" 
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                        x="5" 
+                        y="30"
+                        fontSize="18"
+                        fontWeight="900"
+                        fontFamily="system-ui, -apple-system, sans-serif"
+                    >
+                        {world.world.toUpperCase()}
+                    </text>
+                    {/* Fill layer (on top) */}
+                    <text 
+                        fill="white" 
+                        stroke="none"
+                        x="5" 
+                        y="30"
+                        fontSize="18"
+                        fontWeight="900"
+                        fontFamily="system-ui, -apple-system, sans-serif"
+                    >
+                        {world.world.toUpperCase()}
+                    </text>
+                </svg>
+
+                <Image src={world.image} alt={world.world} width={330} height={140} className="w-full h-full object-cover" />
             </div>
         </div>
     )
@@ -88,10 +147,28 @@ export default function SpongebobPage() {
                 <ChallengeCard world={currentData.challenge} isActive={true} timeLeft={currentData.timeLeft} />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-                {challengeWorlds.map((world, index) => (
-                    <ChallengeCard key={index} world={world} isActive={false} />
-                ))}
+            <div className="mt-8">
+                <h2 className="text-xl font-bold mb-4">All Challenges</h2>
+                <div className="overflow-x-auto pb-4 pt-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    <div className="flex gap-4 w-max px-2">
+                        {(() => {
+                            const currentIndex = challengeWorlds.findIndex(world => world === currentData.challenge);
+                            const nextIndex = (currentIndex + 1) % challengeWorlds.length;
+                            const reorderedChallenges = [
+                                ...challengeWorlds.slice(nextIndex),
+                                ...challengeWorlds.slice(0, nextIndex)
+                            ];
+                            return reorderedChallenges.map((world, index) => (
+                                <ChallengeCard 
+                                    key={world.world} 
+                                    world={world} 
+                                    isActive={world === currentData.challenge}
+                                    isNext={index === 0 && world !== currentData.challenge}
+                                />
+                            ));
+                        })()}
+                    </div>
+                </div>
             </div>
         </div>
     )
