@@ -20,22 +20,22 @@ export const challengeWorlds: ChallengeWorld[] = [
 
 export function getCurrentChallenge(): { challenge: ChallengeWorld; timeLeft: string } {
     const now = new Date();
-    
+
     // Flying Dutchman will be active at 5AM UTC
-    const flyingDutchmanStart = new Date(Date.UTC(2025, 7, 12, 20, 15, 0, 0));
+    const flyingDutchmanStart = new Date(Date.UTC(2025, 9, 5, 12, 30, 0, 0));
     const secondsSinceFlyingStart = Math.floor((now.getTime() - flyingDutchmanStart.getTime()) / 1000);
-    
+
     // Flying Dutchman is index 4, so offset by 4 * 15 * 60 = 3600 seconds to get cycle start
     const totalSeconds = secondsSinceFlyingStart + (4 * 15 * 60);
     const cyclePosition = ((totalSeconds % (75 * 60)) + (75 * 60)) % (75 * 60); // Handle negative values
     const challengeIndex = Math.floor(cyclePosition / (15 * 60));
     const secondsInCurrentChallenge = cyclePosition % (15 * 60);
     const secondsLeft = (15 * 60) - secondsInCurrentChallenge;
-    
+
     const minutesLeft = Math.floor(secondsLeft / 60);
     const secsLeft = secondsLeft % 60;
     const timeLeftFormatted = `${minutesLeft}:${secsLeft.toString().padStart(2, '0')}`;
-    
+
     return {
         challenge: challengeWorlds[challengeIndex],
         timeLeft: timeLeftFormatted
@@ -48,13 +48,13 @@ export function ChallengeCard({ world, isActive, timeLeft, isNext }: { world: Ch
             {(isActive || isNext) ? <div className="w-fit rounded-full absolute -top-4 mx-auto inset-x-0 bg-neutral-100 z-10 outline-2 outline-black">
                 <svg viewBox="0 0 140 30" width="140px" height="30px">
                     {/* Stroke layer (behind) */}
-                    <text 
+                    <text
                         fill="none"
-                        stroke="black" 
-                        strokeWidth="3px" 
+                        stroke="black"
+                        strokeWidth="3px"
                         strokeLinejoin="round"
                         strokeLinecap="round"
-                        x="50%" 
+                        x="50%"
                         y="20"
                         textAnchor="middle"
                         fontSize="14"
@@ -64,10 +64,10 @@ export function ChallengeCard({ world, isActive, timeLeft, isNext }: { world: Ch
                         {isActive ? `EXPIRES IN: ${timeLeft}` : 'UP NEXT'}
                     </text>
                     {/* Fill layer (on top) */}
-                    <text 
-                        fill="white" 
+                    <text
+                        fill="white"
                         stroke="none"
-                        x="50%" 
+                        x="50%"
                         y="20"
                         textAnchor="middle"
                         fontSize="14"
@@ -82,13 +82,13 @@ export function ChallengeCard({ world, isActive, timeLeft, isNext }: { world: Ch
             <div className="overflow-hidden rounded-xl relative w-[330px] h-[140px]">
                 <svg viewBox="0 0 330 50" width="100%" height="50px" className="absolute top-2 left-2 z-10">
                     {/* Stroke layer (behind) */}
-                    <text 
+                    <text
                         fill="none"
-                        stroke="black" 
-                        strokeWidth="4px" 
+                        stroke="black"
+                        strokeWidth="4px"
                         strokeLinejoin="round"
                         strokeLinecap="round"
-                        x="5" 
+                        x="5"
                         y="30"
                         fontSize="18"
                         fontWeight="900"
@@ -97,10 +97,10 @@ export function ChallengeCard({ world, isActive, timeLeft, isNext }: { world: Ch
                         {world.world.toUpperCase()}
                     </text>
                     {/* Fill layer (on top) */}
-                    <text 
-                        fill="white" 
+                    <text
+                        fill="white"
                         stroke="none"
-                        x="5" 
+                        x="5"
                         y="30"
                         fontSize="18"
                         fontWeight="900"
@@ -132,11 +132,11 @@ export function ChallengeCarousel({ currentChallenge }: { currentChallenge: Chal
                         ];
                         // Filter out the current challenge
                         const filteredChallenges = reorderedChallenges.filter(world => world !== currentChallenge);
-                        
+
                         return filteredChallenges.map((world, index) => (
-                            <ChallengeCard 
-                                key={world.world} 
-                                world={world} 
+                            <ChallengeCard
+                                key={world.world}
+                                world={world}
                                 isActive={false}
                                 isNext={index === 0}
                             />
@@ -155,7 +155,7 @@ export function useChallengeData() {
     useEffect(() => {
         setMounted(true);
         setCurrentData(getCurrentChallenge());
-        
+
         const interval = setInterval(() => {
             setCurrentData(getCurrentChallenge());
         }, 1000);
